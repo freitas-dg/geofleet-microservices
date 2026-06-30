@@ -11,3 +11,6 @@ logs:
 
 run-simulator:
 	cd simulator && uv run python main.py
+
+benchmark:
+	cd benchmark && uv run python main.py

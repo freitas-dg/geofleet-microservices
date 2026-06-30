@@ -19,6 +19,18 @@ async def list_drivers(
 ):
     return await use_cases.list_all_drivers()
 
+@router.get("/nearby", response_model=List[DriverResponse])
+async def search_nearby(
+    lat: float,
+    lng: float,
+    radius_km: float,
+    use_cases: DriverServiceUseCases = Depends(get_driver_use_cases)
+):
+    try:
+        return await use_cases.search_nearby_drivers(lat, lng, radius_km)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
 @router.get("/{driver_id}", response_model=DriverResponse)
 async def get_driver(
     driver_id: str,

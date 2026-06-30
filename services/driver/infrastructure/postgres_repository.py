@@ -37,3 +37,26 @@ class PostgresDriverRepository(DriverRepository):
         result = await self.session.execute(select(DriverModel))
         models = result.scalars().all()
         return [m.to_domain() for m in models]
+
+    async def find_nearby(self, lat: float, lng: float, radius_km: float) -> List[Driver]:
+        from sqlalchemy import func
+        distance_col = (
+            6371.0 * func.acos(
+                func.cos(func.radians(lat)) *
+                func.cos(func.radians(DriverModel.latitude)) *
+                func.cos(func.radians(DriverModel.longitude) - func.radians(lng)) +
+                func.sin(func.radians(lat)) *
+                func.sin(func.radians(DriverModel.latitude))
+            )
+        )
+        query = (
+            select(DriverModel)
+            .where(DriverModel.latitude.isnot(None))
+            .where(DriverModel.longitude.isnot(None))
+            .where(distance_col < radius_km)
+            .order_by(distance_col.asc())
+        )
+        result = await self.session.execute(query)
+        models = result.scalars().all()
+        return [m.to_domain() for m in models]
+

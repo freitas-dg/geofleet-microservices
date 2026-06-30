@@ -22,3 +22,8 @@ class DriverServiceUseCases:
 
     async def list_all_drivers(self) -> List[Driver]:
         return await self.repository.list_all()
+
+    async def search_nearby_drivers(self, lat: float, lng: float, radius_km: float) -> List[Driver]:
+        if radius_km <= 0 or radius_km > 50:
+            raise ValueError("Radius must be between 0 and 50 km")
+        return await self.repository.find_nearby(lat, lng, radius_km)

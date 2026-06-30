@@ -13,3 +13,6 @@ class DriverRepository(Protocol):
 
     async def list_all(self) -> List[Driver]:
         ...
+
+    async def find_nearby(self, lat: float, lng: float, radius_km: float) -> List[Driver]:
+        ...
