@@ -1,4 +1,4 @@
-.PHONY: up down logs run-simulator
+.PHONY: up down logs run-simulator benchmark
 
 up:
 	docker compose up -d --build
