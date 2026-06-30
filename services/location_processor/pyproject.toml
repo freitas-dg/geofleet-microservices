@@ -1,0 +1,9 @@
+[project]
+name = "location-processor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "redis>=8.0.1",
+]

@@ -35,6 +35,53 @@ services:
     depends_on:
       - redis
 
+  # Microservices
+  driver-service:
+    build:
+      context: ./services/driver
+    container_name: geofleet-driver
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://geofleet_user:geofleet_password@postgres:5432/geofleet_db
+    depends_on:
+      - postgres
+
+  location-ingest:
+    build:
+      context: ./services/location_ingest
+    container_name: geofleet-location-ingest
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  location-processor:
+    build:
+      context: ./services/location_processor
+    container_name: geofleet-location-processor
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  nearby-search:
+    build:
+      context: ./services/nearby_search
+    container_name: geofleet-nearby-search
+    restart: unless-stopped
+    ports:
+      - "8002:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
 volumes:
   postgres_data:
   redis_data:
