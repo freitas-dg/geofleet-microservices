@@ -35,7 +35,6 @@ services:
     depends_on:
       - redis
 
-  # Microservices
   driver-service:
     build:
       context: ./services/driver
@@ -73,14 +72,44 @@ services:
   nearby-search:
     build:
       context: ./services/nearby_search
-    container_name: geofleet-nearby-search
     restart: unless-stopped
-    ports:
-      - "8002:8000"
+    deploy:
+      replicas: 3
     environment:
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: geofleet-nginx
+    restart: unless-stopped
+    ports:
+      - "8002:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - nearby-search
+
+  benchmark-runner:
+    build:
+      context: ./benchmark
+      dockerfile_inline: |
+        FROM python:3.11-slim
+        COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+        WORKDIR /app
+        COPY pyproject.toml uv.lock ./
+        RUN uv sync --frozen
+        COPY . .
+        CMD ["uv", "run", "python", "main.py"]
+    profiles: ["tools"]
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - SEARCH_API_URL=http://nginx:80/search/nearby
+    depends_on:
+      - redis
+      - nearby-search
+      - nginx
 
 volumes:
   postgres_data:
