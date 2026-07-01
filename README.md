@@ -224,7 +224,7 @@ No futuro, o Redis Streams pode ser substituído por Kafka, caso o projeto evolu
 
 A ideia é desenvolver o projeto em fases.
 
-### Fase 1 — Base do projeto
+### Fase 1 — Base do projeto (Concluído)
 
 * Criar estrutura com Docker Compose.
 * Criar os serviços principais.
@@ -232,7 +232,7 @@ A ideia é desenvolver o projeto em fases.
 * Criar endpoints básicos.
 * Implementar cadastro e status de motoristas.
 
-### Fase 2 — Localização em tempo real
+### Fase 2 — Localização em tempo real (Concluído)
 
 * Criar endpoint para envio de localização.
 * Publicar eventos no Redis Streams.
@@ -240,27 +240,28 @@ A ideia é desenvolver o projeto em fases.
 * Atualizar posições no Redis GEO.
 * Criar endpoint para buscar motoristas próximos.
 
-### Fase 3 — Simulação
+### Fase 3 — Simulação (Concluído)
 
 * Criar simulador de motoristas.
 * Gerar localizações automaticamente.
 * Simular updates a cada 4 segundos.
 * Testar consultas por raio.
 
-### Fase 4 — Performance
+### Fase 4 — Performance (Concluído)
 
 * Medir tempo de resposta das consultas.
 * Comparar consulta via banco relacional com consulta via Redis GEO.
 * Simular aumento de motoristas ativos.
 * Documentar os resultados.
 
-### Fase 5 — Escalabilidade
+### Fase 5 — Escalabilidade (Em andamento)
 
-* Separar dados por cidade/região.
-* Estudar particionamento por geohash.
-* Adicionar múltiplas instâncias dos serviços de leitura.
-* Avaliar uso de Redis Cluster.
-* Avaliar substituição do Redis Streams por Kafka.
+* [x] Adicionar limite (COUNT) nas buscas de raio para evitar sobrecarga de payload.
+* [x] Adicionar múltiplas instâncias dos serviços de leitura (Load Balancer com Nginx).
+* [ ] Separar dados por cidade/região (Sharding geográfico).
+* [ ] Estudar particionamento avançado por geohash ou H3.
+* [ ] Avaliar uso de Redis Cluster.
+* [ ] Avaliar substituição do Redis Streams por Kafka.
 
 ## Observação sobre escala
 
