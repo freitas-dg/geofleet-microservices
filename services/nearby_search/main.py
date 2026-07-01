@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from api.routes import router as search_router
 from infrastructure.redis_connection import redis_client
 
@@ -12,7 +13,8 @@ app = FastAPI(
     title="GeoFleet Nearby Search Service",
     description="High performance geospatial search using Redis GEO",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    default_response_class=ORJSONResponse
 )
 
 app.include_router(search_router)

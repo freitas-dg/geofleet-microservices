@@ -10,4 +10,6 @@ dependencies = [
     "pydantic-settings>=2.14.2",
     "redis>=8.0.1",
     "uvicorn>=0.49.0",
+    "orjson>=3.10.12",
+    "uvloop>=0.21.0; sys_platform != 'win32'",
 ]
